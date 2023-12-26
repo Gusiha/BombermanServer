@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Bomberman.Abstractions
 {
-    internal interface IMovable
+    public interface IMovable
     {
         void Move(Directions direction, int stepX, int stepY);
     }

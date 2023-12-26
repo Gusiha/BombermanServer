@@ -1,6 +1,6 @@
 ﻿namespace Bomberman.Abstractions
 {
-    internal interface IDestroyable
+    public interface IDestroyable
     {
         void Destroy();
     }

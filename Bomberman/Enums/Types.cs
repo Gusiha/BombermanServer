@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Bomberman.Enums
 {
-    internal enum Type
+    public enum Type
     {
         Walkable,
         Solid

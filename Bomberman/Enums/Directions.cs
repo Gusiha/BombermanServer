@@ -1,6 +1,6 @@
 ﻿namespace Bomberman.Enums
 {
-    internal enum Directions
+    public enum Directions
     {
         Up,
         Down,

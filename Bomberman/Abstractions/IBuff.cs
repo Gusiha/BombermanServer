@@ -2,7 +2,7 @@
 
 namespace Bomberman
 {
-    internal interface IBuff
+    public interface IBuff
     {
         void Activate();
     }

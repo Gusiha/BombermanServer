@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Bomberman.Classes
 {
-    internal class Bomb : Entity, IMovable
+    public class Bomb : Entity, IMovable
     {
         protected Bomb(int startX, int startY) : base(startX, startY)
         {

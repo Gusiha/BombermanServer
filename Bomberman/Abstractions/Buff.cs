@@ -7,7 +7,7 @@ using Bomberman.Classes;
 
 namespace Bomberman.Abstractions
 {
-    internal abstract class Buff : Entity, IBuff
+    public abstract class Buff : Entity, IBuff
     {
         private Bomb _buffedEntity;
 

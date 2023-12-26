@@ -2,7 +2,7 @@
 
 namespace Bomberman.Abstractions
 {
-    internal abstract class Entity
+    public abstract class Entity
     {
         public int X { get; protected set; }
         public int Y { get; protected set; }

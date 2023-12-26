@@ -4,13 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bomberman.Enums
+namespace ServerBomberman
 {
-    public enum States
+    internal class GamingParser
     {
-        NotPlaced,
-        Placed,
-        Hidden,
-        Destroyed
+
     }
 }
