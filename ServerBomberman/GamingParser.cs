@@ -2,7 +2,7 @@
 {
     public static class GamingParser
     {
-        static int[] Parse(string input)
+        public static int[] Parse(string input)
         {
             string[] strings = input.Split(' ');
 
