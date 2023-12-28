@@ -51,9 +51,12 @@ namespace ServerBomberman
             return true;
         }
 
-        public Player FindPlayerById(Guid id)
+        public Player? FindPlayerById(Guid id)
         {
-            return id == Player1.ID ? Player1 : Player2;
+            if (id != Player1.ID && id != Player2.ID)
+                return null;
+            else
+                return id == Player1.ID ? Player1 : Player2;
         }
 
  
