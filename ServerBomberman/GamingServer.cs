@@ -13,7 +13,6 @@ namespace ServerBomberman
         private ArraySegment<byte> _bufferSegment { get; set; }
 
 
-
         public int TickRate { get; set; }
         public double TicksPerSecond { get; set; }
 
@@ -109,6 +108,15 @@ namespace ServerBomberman
                     int[] response = GamingParser.Parse(message);
                     switch (response[2])
                     {
+                        case 1:
+                            if (Sessions.Last().PlayerAmount >= 2)
+                            {
+                                Sessions.Add(new());
+                                
+                                
+                            }
+                            break;
+
                         case 400:
                             {
                                 //TODO Отравить сообщение об ошибке
@@ -129,6 +137,8 @@ namespace ServerBomberman
 
             });
         }
+
+
 
         public async Task SendTo(EndPoint recipient, byte[] data)
         {

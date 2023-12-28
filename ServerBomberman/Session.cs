@@ -16,8 +16,8 @@ namespace ServerBomberman
         public int Milliseconds { get; set; }
         public int TickRate { get; set; }
         public double TicksPerSecond { get; set; }
-        public int ID { get; set; }
-
+        public Guid Id { get; set; }
+        public int PlayerAmount { get; private set; }
 
         public Player Player1 { get; set; }
         public Player Player2 { get; set; }
@@ -46,11 +46,17 @@ namespace ServerBomberman
 
         }
 
+        public bool Connect(Player player)
+        {
+            return true;
+        }
+
         public Player FindPlayerById(Guid id)
         {
             return id == Player1.ID ? Player1 : Player2;
         }
 
+ 
         public void SessionTickController()
         {
             if (Milliseconds >= TicksPerSecond)
