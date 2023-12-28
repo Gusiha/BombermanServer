@@ -105,7 +105,7 @@ namespace ServerBomberman
                 
                 if (message.Contains("\r\n"))
                 {
-                    int[] response = GamingParser.Parse(message);
+                    int[] response = GameInterpreter.Parse(message);
                     switch (response[2])
                     {
                         case 1:
