@@ -95,6 +95,8 @@ namespace ServerBomberman
 
         public void StartMessageLoop()
         {
+            GameInterpreter gameInterpreter = new GameInterpreter();
+
             _ = Task.Run(async () =>
             {
                 SocketReceiveFromResult result;
@@ -102,25 +104,48 @@ namespace ServerBomberman
                 //{
                 result = await _socket.ReceiveFromAsync(_bufferSegment, SocketFlags.None, _endPoint);
                 var message = Encoding.UTF8.GetString(_buffer, 0, result.ReceivedBytes);
-                
+
                 if (message.Contains("\r\n"))
                 {
-                    int[] response = GameInterpreter.Parse(message);
+
+                    int[] response = gameInterpreter.Parse(message);
                     switch (response[2])
                     {
                         case 1:
-                            if (Sessions.Last().PlayerAmount >= 2)
                             {
-                                Sessions.Add(new());
-                                
-                                
-                            }
-                            break;
+                                bool success = false;
 
+                                for (int i = 0; i < 10; i++)
+                                {
+                                    if (!GameInterpreter.ConnectPlayer(Sessions.Last()))
+                                    {
+                                        Sessions.Add(new Session());
+                                    }
+
+                                    else
+                                    {
+                                        success = true;
+                                        break;
+                                    }
+                                }
+
+                                if(!success)
+                                    await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes($"400 Failed to join session after 10 retries"));
+
+
+
+                                break;
+                            }
                         case 400:
                             {
                                 //TODO Отравить сообщение об ошибке
                                 await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes($"400 {response[1]}"));
+                                break;
+                            }
+
+                        case 402:
+                            {
+
                                 break;
                             }
 

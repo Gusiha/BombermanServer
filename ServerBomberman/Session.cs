@@ -9,8 +9,6 @@ namespace ServerBomberman
         public Session()
         {
             IsGameEnded = false;
-            Player1 = new Player(0,0);
-            Player2 = new Player(0,1);
         }
 
         public int Milliseconds { get; set; }
@@ -48,7 +46,21 @@ namespace ServerBomberman
 
         public bool Connect(Player player)
         {
-            return true;
+            switch (PlayerAmount)
+            {
+                case 0:
+                    Player1 = player;
+                    //TODO Координаты игрока
+                    return true;
+
+                case 1:
+                    Player2 = player;
+                    //TODO Координаты игрока
+                    return true;
+
+                default:
+                    return false;
+            }
         }
 
         public Player? FindPlayerById(Guid id)
