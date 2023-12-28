@@ -1,4 +1,6 @@
-﻿namespace ServerBomberman
+﻿using Bomberman.Classes;
+
+namespace ServerBomberman
 {
     public static class GamingParser
     {
@@ -58,6 +60,41 @@
             }
 
             return response;
+        }
+
+        public static int[] DoAction(int[] response, Player player, Session session)
+        {
+            bool success = false;
+
+            int[] finalResponse = new int[2];
+            finalResponse[0] = response[2];
+
+            switch (response[2])
+            {
+                case 0:
+                    {
+                        success = session.Move(player, response[0], response[1]);
+                        break;
+                    }
+                case 1:
+                    {
+                        //connect method
+                        break;
+                    }
+                case 2:
+                    {
+                        //disconnect method
+                        break;
+                    }
+                case 3:
+                    {
+                        //place method
+                        break;
+                    }
+            }
+
+            finalResponse[1] = success ? 1 : 0;
+            return finalResponse;
         }
     }
 }
