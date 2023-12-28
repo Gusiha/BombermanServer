@@ -8,6 +8,7 @@ namespace Bomberman.Enums
 {
     public enum States
     {
+        Empty,
         NotPlaced,
         Placed,
         Hidden,

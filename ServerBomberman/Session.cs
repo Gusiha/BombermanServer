@@ -1,5 +1,6 @@
 ﻿using Bomberman.Abstractions;
 using Bomberman.Classes;
+using System.Reflection.Metadata.Ecma335;
 
 namespace ServerBomberman
 {
@@ -24,6 +25,31 @@ namespace ServerBomberman
         private bool IsGameEnded { get; set; }
         public Entity[,] GameState { get; set; }
         public DateTime StartTime { get; set; }
+
+        public bool Move(Player player, int deltaX, int deltaY)
+        {
+
+            if (player.X + deltaX >= GameState.GetLength(1) || player.X + deltaX <= 0 
+                || player.Y + deltaY >= GameState.GetLength(0) || player.Y + deltaY <= 0)
+            {
+                return false;
+            }
+
+            GameState[player.Y, player.X] = new Emptiness(player.X, player.Y);
+
+            player.X += deltaX;
+            player.Y += deltaY;
+
+            GameState[player.Y, player.X] = player;
+
+            return true;
+
+        }
+
+        public Player FindPlayerById(Guid id)
+        {
+            return id == Player1.ID ? Player1 : Player2;
+        }
 
         public void SessionTickController()
         {
