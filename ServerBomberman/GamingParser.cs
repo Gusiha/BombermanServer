@@ -1,6 +1,6 @@
 ﻿namespace ServerBomberman
 {
-    public class GamingParser
+    public static class GamingParser
     {
         static int[] Parse(string input)
         {
