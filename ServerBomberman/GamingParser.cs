@@ -62,6 +62,11 @@ namespace ServerBomberman
             return response;
         }
 
+        public static bool ConnectPlayer(Session session)
+        {
+            return session.Connect(new Player(0, 0));
+        }
+
         public static int[] DoAction(int[] response, Player player, Session session)
         {
             bool success = false;
