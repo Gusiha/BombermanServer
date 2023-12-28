@@ -1,23 +1,26 @@
 ﻿using Bomberman.Abstractions;
+using Bomberman.Classes;
 
 namespace ServerBomberman
 {
     public class Session
     {
-        public Session(int tickRate)
+        public Session()
         {
-            Milliseconds = 0;
-            TickRate = tickRate;
-            TicksPerSecond = 1000 / tickRate;
             IsGameEnded = false;
+            Player1 = new Player(0,0);
+            Player2 = new Player(0,1);
         }
 
         public int Milliseconds { get; set; }
         public int TickRate { get; set; }
         public double TicksPerSecond { get; set; }
         public int ID { get; set; }
-        public int Player1ID { get; set; }
-        public int Player2ID { get; set; }
+
+
+        public Player Player1 { get; set; }
+        public Player Player2 { get; set; }
+
         private bool IsGameEnded { get; set; }
         public Entity[,] GameState { get; set; }
         public DateTime StartTime { get; set; }

@@ -10,8 +10,11 @@ namespace Bomberman.Classes
 {
     public class Player : Entity, IMovable, IDestroyable
     {
-        protected Player(int startX, int startY) : base(startX, startY)
+        public Guid ID { get; private set; }
+
+        public Player(int startX, int startY) : base(startX, startY)
         {
+            ID = Guid.NewGuid();
 
         }
 

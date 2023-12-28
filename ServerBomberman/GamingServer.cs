@@ -104,6 +104,7 @@ namespace ServerBomberman
                 result = await _socket.ReceiveFromAsync(_bufferSegment, SocketFlags.None, _endPoint);
                 var message = Encoding.UTF8.GetString(_buffer, 0, result.ReceivedBytes);
                 Console.WriteLine($"Recieved : {message} from {result.RemoteEndPoint}");
+                
                 //Парсинг сообщения
                 //Ответ на сообщение (КОД сообщения + возможно тело и тд)
                 //await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes("Hello from Server"));
