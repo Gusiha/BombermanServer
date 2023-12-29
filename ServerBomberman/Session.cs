@@ -76,6 +76,15 @@ namespace ServerBomberman
             }
         }
 
+        public bool Disconnect(Player player)
+        {
+            Player1 = null;
+            Player2 = null;
+            IsGameEnded = true;
+
+            return true;
+        }
+
         public Player? FindPlayerById(Guid id)
         {
             if (id != Player1.ID && id != Player2.ID)
