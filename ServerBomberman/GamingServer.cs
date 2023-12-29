@@ -33,6 +33,8 @@ namespace ServerBomberman
                 Sessions.Add(new Session());
             }
 
+            Console.WriteLine(Sessions[0].ToString());
+
             TickRate = tickRate;
             TicksPerSecond = 1000 / tickRate;
 
@@ -114,6 +116,21 @@ namespace ServerBomberman
 
         }
 
+        public void Update()
+        {
+            _ = Task.Run(async () =>
+            {
+                foreach (var item in Sessions)
+                {
+                    if (item.IsGameStarted)
+                    {
+                        string gameState = item.ToString();
+                        await SendTo(item.Player1.EndPoint, Encoding.UTF8.GetBytes($"202 {gameState}"));
+                        await SendTo(item.Player2.EndPoint, Encoding.UTF8.GetBytes($"202 {gameState}"));
+                    }
+                }
+            });
+        }
         public void StartMessageLoop()
         {
 
@@ -126,133 +143,130 @@ namespace ServerBomberman
                 result = await socket.ReceiveFromAsync(bufferSegment, SocketFlags.None, _endPoint);
                 var message = Encoding.UTF8.GetString(_buffer, 0, result.ReceivedBytes);
 
-                
 
-                    int[] response = gameInterpreter.Parse(message);
-                    switch (response[2])
-                    {
-                        //Move
-                        case 0:
+
+                int[] response = gameInterpreter.Parse(message);
+                switch (response[2])
+                {
+                    //Move
+                    case 0:
+                        {
+                            Session? foundSession = FindSessionByPlayerID(gameInterpreter.PlayerID);
+
+                            if (foundSession is null)
                             {
-                                Session? foundSession = FindSessionByPlayerID(gameInterpreter.PlayerID);
-                                
-                                if (foundSession is null)
+                                await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes($"400 Failed to move"));
+                                break;
+                            }
+
+
+                            int messageCode = gameInterpreter.DoAction(response, foundSession);
+
+                            switch (messageCode)
+                            {
+                                case 200:
+                                    {
+                                        await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes($"{messageCode} {foundSession.FindPlayerById(gameInterpreter.PlayerID)?.X} {foundSession.FindPlayerById(gameInterpreter.PlayerID)?.Y} "));
+                                        break;
+                                    }
+
+                                case 201:
+                                    {
+                                        await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes($"{messageCode} You can't move in this way according to the rules"));
+                                        break;
+                                    }
+
+                                default:
+                                    break;
+                            }
+
+                            break;
+                        }
+
+                    //Connect
+                    case 1:
+                        {
+                            bool success = false;
+
+                            for (int i = 0; i < Sessions.Count; i++)
+                            {
+
+                                if (gameInterpreter.ConnectPlayer(Sessions[i], result.RemoteEndPoint))
                                 {
-                                    await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes($"400 Failed to move"));
+                                    success = true;
                                     break;
                                 }
 
+                            }
 
-                                int messageCode = gameInterpreter.DoAction(response, foundSession);
+                            if (!success)
+                                await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes($"400 Failed to join session. Sessions are fulled"));
+
+                            else
+                                await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes($"200 {gameInterpreter.PlayerID}"));
+
+                            break;
+                        }
+
+                    //Disconnect
+                    case 2:
+                        {
+                            Session? session = FindSessionByPlayerID(gameInterpreter.PlayerID);
+
+                            if (session is null)
+                            {
+                                await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes($"400 Failed to disconnect from session"));
+                                break;
+                            }
+
+                            else
+                            {
+                                int messageCode = gameInterpreter.DoAction(response, session);
 
                                 switch (messageCode)
                                 {
                                     case 200:
                                         {
-                                            await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes($"{messageCode} {foundSession.FindPlayerById(gameInterpreter.PlayerID)?.X} {foundSession.FindPlayerById(gameInterpreter.PlayerID)?.Y} "));
+                                            await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes($"{messageCode} You have disconnected successfully"));
                                             break;
                                         }
 
-                                    case 201:
-                                        {
-                                            await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes($"{messageCode} You can't move in this way according to the rules"));
-                                            break;
-                                        }
+
+
 
                                     default:
                                         break;
                                 }
-
-                                await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes($"Failed to join session. Sessions are fulled"));
-
+                                await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes($" Failed to disconnect from session"));
 
                                 break;
                             }
+                        }
+                    //PlaceBomb
+                    case 4:
+                        {
 
-                        //Connect
-                        case 1:
-                            {
-                                bool success = false;
-
-                                for (int i = 0; i < Sessions.Count; i++)
-                                {
-
-                                    if (gameInterpreter.ConnectPlayer(Sessions[i], result.RemoteEndPoint))
-                                    {
-                                        success = true;
-                                        break;
-                                    }
-
-                                }
-
-                                if (!success)
-                                    await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes($"400 Failed to join session. Sessions are fulled"));
-
-                                else
-                                    await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes($"200 {gameInterpreter.PlayerID}"));
-
-                                break;
-                            }
-
-                        //Disconnect
-                        case 2:
-                            {
-                                Session? session = FindSessionByPlayerID(gameInterpreter.PlayerID);
-
-                                if (session is null)
-                                {
-                                    await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes($"400 Failed to disconnect from session"));
-                                    break;
-                                }
-
-                                else
-                                {
-                                    int messageCode = gameInterpreter.DoAction(response, session);
-
-                                    switch (messageCode)
-                                    {
-                                        case 200:
-                                            {
-                                                await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes($"{messageCode} You have disconnected successfully"));
-                                                break;
-                                            }
-
-                                       
-
-
-                                        default:
-                                            break;
-                                    }
-                                    await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes($" Failed to disconnect from session"));
-
-                                    break;
-                                }
-                            }
-                        //PlaceBomb
-                        case 4:
-                            {
-
-                                break;
-                            }
-
-
-                        case 400:
-                            {
-                                //TODO Отравить сообщение об ошибке
-                                await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes($"400 {response[1]}"));
-                                break;
-                            }
-
-                        case 402:
-                            {
-
-                                break;
-                            }
-
-                        default:
                             break;
-                    }
-                
+                        }
+
+
+                    case 400:
+                        {
+                            //TODO Отравить сообщение об ошибке
+                            await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes($"400 {response[1]}"));
+                            break;
+                        }
+
+                    case 402:
+                        {
+
+                            break;
+                        }
+
+                    default:
+                        break;
+                }
+
                 Console.WriteLine($"Recieved : {message} from {result.RemoteEndPoint}");
 
                 //Парсинг сообщения

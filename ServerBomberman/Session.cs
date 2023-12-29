@@ -27,7 +27,8 @@ namespace ServerBomberman
         public Player? Player1 { get; set; }
         public Player? Player2 { get; set; }
 
-        private bool IsGameEnded { get; set; }
+        public bool IsGameStarted { get; set; }
+        public bool IsGameEnded { get; set; }
         public Entity[,] GameState { get; set; }
         public DateTime StartTime { get; set; }
 
@@ -122,5 +123,17 @@ namespace ServerBomberman
 
         }
 
+        public override string ToString()
+        {
+            string gameState = string.Empty;
+
+            foreach (var item in GameState)
+            {
+                gameState += item.EntityID.ToString();
+                gameState += " ";
+            }
+
+            return gameState.TrimEnd();
+        }
     }
 }
