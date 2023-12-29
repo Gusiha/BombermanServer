@@ -11,7 +11,7 @@ namespace Bomberman.Abstractions
     {
         private Bomb _buffedEntity;
 
-        protected Buff(int startX, int startY) : base(startX, startY)
+        protected Buff(int startX, int startY) : base(startX, startY, 4)
         {
         }
 

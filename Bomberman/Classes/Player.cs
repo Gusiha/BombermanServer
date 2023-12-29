@@ -1,5 +1,6 @@
 ﻿using Bomberman.Abstractions;
 using Bomberman.Enums;
+using System.Net;
 
 namespace Bomberman.Classes
 {
@@ -8,13 +9,15 @@ namespace Bomberman.Classes
         public DateTime BombTimer { get; set; }
         public DateTime MoveTimer { get; set; }
 
+        public IPEndPoint EndPoint { get; private set; }
+
 
         public Guid ID { get; private set; }
 
 
-        public Player(int startX, int startY) : base(startX, startY, 2)
+        public Player(int startX, int startY, IPEndPoint endPoint) : base(startX, startY, 2)
         {
-            
+            EndPoint = endPoint;
             ID = Guid.NewGuid();
             BombTimer = DateTime.Now;
             MoveTimer = DateTime.Now;

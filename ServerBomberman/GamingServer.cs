@@ -93,9 +93,24 @@ namespace ServerBomberman
 
         }
 
+        private Session? FindSessionByPlayerID(Guid id)
+        {
+            foreach (var item in Sessions)
+            {
+                if (item.FindPlayerById(id) != null)
+                {
+                    return item;
+                }
+
+
+            }
+            return null;
+
+        }
+
         public void StartMessageLoop()
         {
-            
+
             _ = Task.Run(async () =>
             {
                 GameInterpreter gameInterpreter = new GameInterpreter();
@@ -114,16 +129,8 @@ namespace ServerBomberman
                         //Move
                         case 0:
                             {
-                                Session foundSession = null;
-                                foreach (var item in Sessions)
-                                {
-                                    if (item.FindPlayerById(gameInterpreter.PlayerID) != null)
-                                    {
-                                        foundSession = item;
-                                    }
-
-                                }
-
+                                Session? foundSession = FindSessionByPlayerID(gameInterpreter.PlayerID);
+                                
                                 if (foundSession is null)
                                 {
                                     await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes($"400 Failed to move"));
@@ -131,7 +138,25 @@ namespace ServerBomberman
                                 }
 
 
-                                gameInterpreter.DoAction(response, foundSession);
+                                int messageCode = gameInterpreter.DoAction(response, foundSession);
+
+                                switch (messageCode)
+                                {
+                                    case 200:
+                                        {
+                                            await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes($"{messageCode} {} "));
+                                            break;
+                                        }
+
+                                    case 201:
+                                        {
+                                            await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes($"{messageCode} You can't move in this way according to the rules"));
+                                            break;
+                                        }
+
+                                    default:
+                                        break;
+                                }
 
                                 await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes($"Failed to join session. Sessions are fulled"));
 
@@ -147,7 +172,7 @@ namespace ServerBomberman
                                 for (int i = 0; i < Sessions.Count; i++)
                                 {
 
-                                    if (GameInterpreter.ConnectPlayer(Sessions[i]))
+                                    if (gameInterpreter.ConnectPlayer(Sessions[i], result.RemoteEndPoint))
                                     {
                                         success = true;
                                         break;
@@ -166,8 +191,38 @@ namespace ServerBomberman
 
                         //Disconnect
                         case 2:
+                            {
+                                Session? session = FindSessionByPlayerID(gameInterpreter.PlayerID);
+
+                                if (session is null)
+                                {
+                                    await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes($"400 Failed to disconnect from session"));
+                                    break;
+                                }
+
+                                else
+                                {
+                                    int messageCode = gameInterpreter.DoAction(response, session);
+
+                                    switch (messageCode)
+                                    {
+                                        case 200:
+                                            {
+                                                await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes($"{messageCode} You have been disconnected successfully"));
+                                                break;
+                                            }
+
+                                       
 
 
+                                        default:
+                                            break;
+                                    }
+                                    await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes($" Failed to disconnect from session"));
+
+                                    break;
+                                }
+                            }
                         //PlaceBomb
                         case 4:
                             {
