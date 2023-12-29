@@ -144,7 +144,7 @@ namespace ServerBomberman
                                 {
                                     case 200:
                                         {
-                                            await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes($"{messageCode} {} "));
+                                            await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes($"{messageCode} {foundSession.FindPlayerById(gameInterpreter.PlayerID)?.X} {foundSession.FindPlayerById(gameInterpreter.PlayerID)?.Y} "));
                                             break;
                                         }
 
@@ -208,7 +208,7 @@ namespace ServerBomberman
                                     {
                                         case 200:
                                             {
-                                                await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes($"{messageCode} You have been disconnected successfully"));
+                                                await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes($"{messageCode} You have disconnected successfully"));
                                                 break;
                                             }
 
