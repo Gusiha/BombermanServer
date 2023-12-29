@@ -95,8 +95,6 @@ namespace ServerBomberman
 
         public void StartMessageLoop()
         {
-            GameInterpreter gameInterpreter = new GameInterpreter();
-
             _ = Task.Run(async () =>
             {
                 GameInterpreter gameInterpreter = new GameInterpreter();
