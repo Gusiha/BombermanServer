@@ -26,7 +26,13 @@ namespace ServerBomberman
 
         public GamingServer(int tickRate, IPAddress iPAddress, int port)
         {
-            Sessions = new List<Session>(5);
+            Sessions = new List<Session>();
+
+            for (int i = 0; i < 5; i++)
+            {
+                Sessions.Add(new Session());
+            }
+
             TickRate = tickRate;
             TicksPerSecond = 1000 / tickRate;
 
@@ -120,8 +126,7 @@ namespace ServerBomberman
                 result = await socket.ReceiveFromAsync(bufferSegment, SocketFlags.None, _endPoint);
                 var message = Encoding.UTF8.GetString(_buffer, 0, result.ReceivedBytes);
 
-                if (message.Contains("\r\n"))
-                {
+                
 
                     int[] response = gameInterpreter.Parse(message);
                     switch (response[2])
@@ -247,7 +252,7 @@ namespace ServerBomberman
                         default:
                             break;
                     }
-                }
+                
                 Console.WriteLine($"Recieved : {message} from {result.RemoteEndPoint}");
 
                 //Парсинг сообщения
