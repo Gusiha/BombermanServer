@@ -99,7 +99,7 @@ namespace ServerBomberman
         /// </summary>
         /// <param name="session">session to connect a new player to</param>
         /// <returns>True if successful, False if not</returns>
-        public bool ConnectPlayer(Session session, IPEndPoint endPoint)
+        public bool ConnectPlayer(Session session, EndPoint endPoint)
         {
             return session.Connect(new Player(0, 0, endPoint));
         }
