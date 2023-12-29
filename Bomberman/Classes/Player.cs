@@ -9,13 +9,13 @@ namespace Bomberman.Classes
         public DateTime BombTimer { get; set; }
         public DateTime MoveTimer { get; set; }
 
-        public IPEndPoint EndPoint { get; private set; }
+        public EndPoint EndPoint { get; private set; }
 
 
         public Guid ID { get; private set; }
 
 
-        public Player(int startX, int startY, IPEndPoint endPoint) : base(startX, startY, 2)
+        public Player(int startX, int startY, EndPoint endPoint) : base(startX, startY, 2)
         {
             EndPoint = endPoint;
             ID = Guid.NewGuid();
