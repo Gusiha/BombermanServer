@@ -4,6 +4,7 @@ namespace Bomberman.Abstractions
 {
     public abstract class Entity
     {
+        public int EntityID { get; }
         public int X { get; set; }
         public int Y { get; set; }
 
@@ -12,15 +13,16 @@ namespace Bomberman.Abstractions
         public States State { get; protected set; }
 
 
-        public Entity(int startX, int startY)
+        public Entity(int startX, int startY, int id)
         {
+            EntityID = id;
             X = startX;
             Y = startY;
         }
 
 
 
- 
+
         public void Hide()
         {
             State = States.Hidden;

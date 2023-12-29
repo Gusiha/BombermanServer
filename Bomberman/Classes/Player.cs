@@ -12,8 +12,9 @@ namespace Bomberman.Classes
         public Guid ID { get; private set; }
 
 
-        public Player(int startX, int startY) : base(startX, startY)
+        public Player(int startX, int startY) : base(startX, startY, 2)
         {
+            
             ID = Guid.NewGuid();
             BombTimer = DateTime.Now;
             MoveTimer = DateTime.Now;

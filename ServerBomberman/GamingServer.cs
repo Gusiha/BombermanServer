@@ -95,6 +95,7 @@ namespace ServerBomberman
 
         public void StartMessageLoop()
         {
+            
             _ = Task.Run(async () =>
             {
                 GameInterpreter gameInterpreter = new GameInterpreter();
@@ -110,6 +111,7 @@ namespace ServerBomberman
                     int[] response = gameInterpreter.Parse(message);
                     switch (response[2])
                     {
+                        //Move
                         case 0:
                             {
                                 Session foundSession = null;
@@ -121,11 +123,23 @@ namespace ServerBomberman
                                     }
 
                                 }
+
+                                if (foundSession is null)
+                                {
+                                    await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes($"400 Failed to move"));
+                                    break;
+                                }
+
+
                                 gameInterpreter.DoAction(response, foundSession);
+
+                                await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes($"Failed to join session. Sessions are fulled"));
+
 
                                 break;
                             }
 
+                        //Connect
                         case 1:
                             {
                                 bool success = false;
@@ -144,7 +158,19 @@ namespace ServerBomberman
                                 if (!success)
                                     await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes($"400 Failed to join session. Sessions are fulled"));
 
+                                else
+                                    await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes($"200 {gameInterpreter.PlayerID}"));
 
+                                break;
+                            }
+
+                        //Disconnect
+                        case 2:
+
+
+                        //PlaceBomb
+                        case 4:
+                            {
 
                                 break;
                             }

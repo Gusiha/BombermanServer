@@ -10,7 +10,7 @@ namespace Bomberman.Classes
 {
     public class Bomb : Entity, IMovable
     {
-        protected Bomb(int startX, int startY) : base(startX, startY)
+        protected Bomb(int startX, int startY) : base(startX, startY, 3)
         {
 
         }

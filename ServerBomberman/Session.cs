@@ -8,6 +8,14 @@ namespace ServerBomberman
         public Session()
         {
             IsGameEnded = false;
+            GameState = new Entity[11, 13];
+            for (int i = 0; i < GameState.GetLength(0); i++)
+            {
+                for (int j = 0; j < GameState.GetLength(1); j++)
+                {
+                    GameState[i, j] = new Emptiness(j,i);
+                }
+            }
         }
 
         public int Milliseconds { get; set; }
@@ -53,12 +61,14 @@ namespace ServerBomberman
             {
                 case 0:
                     Player1 = player;
-                    //TODO Координаты игрока
+                    Player1.X = 3;
+                    Player1.Y = 5;
                     return true;
 
                 case 1:
                     Player2 = player;
-                    //TODO Координаты игрока
+                    Player2.X = 10;
+                    Player2.Y = 5;
                     return true;
 
                 default:

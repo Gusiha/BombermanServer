@@ -9,7 +9,7 @@ namespace Bomberman.Classes
 {
     public class Emptiness : Entity
     {
-        public Emptiness(int startX, int startY) : base(startX, startY)
+        public Emptiness(int startX, int startY) : base(startX, startY, 0)
         {
             State = Enums.States.Empty;
         }
