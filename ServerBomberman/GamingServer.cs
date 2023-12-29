@@ -89,7 +89,6 @@ namespace ServerBomberman
 
         public void GameLoopAsync()
         {
-
             Stopwatch timer = Stopwatch.StartNew();
 
             //while (Sessions.Count > 0)
@@ -98,7 +97,6 @@ namespace ServerBomberman
                 //Inside [ServerTickController] you can place methods, which have to be done with certain tickrate
                 ServerTickController(StartMessageLoop, Update);   
             }
-
         }
 
         private Session? FindSessionByPlayerID(Guid id)
@@ -204,7 +202,7 @@ namespace ServerBomberman
                                 await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes($"400 Failed to join session. Sessions are fulled"));
 
                             else
-                                await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes($"200 {gameInterpreter.PlayerID}"));
+                                await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes($"203 {gameInterpreter.PlayerID}"));
 
                             break;
                         }
