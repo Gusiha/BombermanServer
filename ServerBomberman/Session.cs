@@ -16,8 +16,8 @@ namespace ServerBomberman
         public Guid Id { get; set; }
         public int PlayerAmount { get; private set; }
 
-        public Player Player1 { get; set; }
-        public Player Player2 { get; set; }
+        public Player? Player1 { get; set; }
+        public Player? Player2 { get; set; }
 
         private bool IsGameEnded { get; set; }
         public Entity[,] GameState { get; set; }

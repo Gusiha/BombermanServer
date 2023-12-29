@@ -7,10 +7,10 @@ namespace ServerBomberman
 {
     public class GamingServer
     {
-        private Socket _socket { get; set; }
+        private Socket socket { get; set; }
         private IPEndPoint _endPoint;
         private byte[] _buffer;
-        private ArraySegment<byte> _bufferSegment { get; set; }
+        private ArraySegment<byte> bufferSegment { get; set; }
 
 
         public int TickRate { get; set; }
@@ -37,14 +37,14 @@ namespace ServerBomberman
         public void Initialize(IPAddress iPAddress, int port)
         {
             _buffer = new byte[2048];
-            _bufferSegment = new(_buffer);
+            bufferSegment = new(_buffer);
             IPAddress = iPAddress;
             Port = port;
             _endPoint = new IPEndPoint(IPAddress.Any, Port);
 
-            IPEndPoint serverEndpoint = new IPEndPoint(IPAddress, Port);
-            _socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-            _socket.Bind(serverEndpoint);
+            IPEndPoint serverEndpoint = new(IPAddress, Port);
+            socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+            socket.Bind(serverEndpoint);
         }
 
         //public void ServerTickController()
@@ -95,6 +95,7 @@ namespace ServerBomberman
 
         public void StartMessageLoop()
         {
+            GameInterpreter gameInterpreter = new GameInterpreter();
 
             _ = Task.Run(async () =>
             {
@@ -102,7 +103,7 @@ namespace ServerBomberman
                 SocketReceiveFromResult result;
                 //while (true)
                 //{
-                result = await _socket.ReceiveFromAsync(_bufferSegment, SocketFlags.None, _endPoint);
+                result = await socket.ReceiveFromAsync(bufferSegment, SocketFlags.None, _endPoint);
                 var message = Encoding.UTF8.GetString(_buffer, 0, result.ReceivedBytes);
 
                 if (message.Contains("\r\n"))
@@ -183,7 +184,7 @@ namespace ServerBomberman
         public async Task SendTo(EndPoint recipient, byte[] data)
         {
             var messageToSend = new ArraySegment<byte>(data);
-            await _socket.SendToAsync(messageToSend, recipient);
+            await socket.SendToAsync(messageToSend, recipient);
         }
 
 
