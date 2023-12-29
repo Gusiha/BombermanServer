@@ -98,9 +98,17 @@ namespace ServerBomberman
         /// </summary>
         /// <param name="session">session to connect a new player to</param>
         /// <returns>True if successful, False if not</returns>
-        public static bool ConnectPlayer(Session session)
+        public bool ConnectPlayer(Session session)
         {
             return session.Connect(new Player(0, 0));
+        }
+
+        public bool DisconnectPlayer(Session session)
+        {
+            Player? player = session.FindPlayerById(PlayerID);
+            if(player != null)
+                return session.Disconnect(player);
+            return false;
         }
 
         /// <summary>
