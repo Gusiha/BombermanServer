@@ -109,7 +109,15 @@ namespace ServerBomberman
         /// <returns>True if successful, False if not</returns>
         public bool ConnectPlayer(Session session, EndPoint endPoint)
         {
-            return session.Connect(new Player(0, 0, endPoint));
+            Player player = new Player(0, 0, endPoint);
+            bool success = session.Connect(player);
+            if(success)
+            {
+                PlayerID = player.ID;
+                return true;
+            }
+
+            return false;
         }
 
         public bool DisconnectPlayer(Session session, Player player)
