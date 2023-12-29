@@ -37,15 +37,14 @@ namespace ServerBomberman
 
             if (strings.Length != 2)
             {
-                if (strings.Length < 1)
-                {
-                    response[2] = 400;
-                    return response;
-                }
-                else if (strings[0] == "connect")
+                if (strings.Length == 1 && strings[0] == "connect")
                 {
                     response[2] = 1;
+                    return response;
                 }
+
+                response[2] = 400;
+                return response;
             }
 
             if (strings.Length > 1)
