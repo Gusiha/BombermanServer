@@ -1,4 +1,5 @@
 ﻿using Bomberman.Classes;
+using System.Net;
 using System.Reflection.Metadata.Ecma335;
 
 namespace ServerBomberman
@@ -98,9 +99,9 @@ namespace ServerBomberman
         /// </summary>
         /// <param name="session">session to connect a new player to</param>
         /// <returns>True if successful, False if not</returns>
-        public bool ConnectPlayer(Session session)
+        public bool ConnectPlayer(Session session, IPEndPoint endPoint)
         {
-            return session.Connect(new Player(0, 0));
+            return session.Connect(new Player(0, 0, endPoint));
         }
 
         public bool DisconnectPlayer(Session session, Player player)
