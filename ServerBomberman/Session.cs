@@ -1,6 +1,5 @@
 ﻿using Bomberman.Abstractions;
 using Bomberman.Classes;
-using System.Reflection.Metadata.Ecma335;
 
 namespace ServerBomberman
 {
@@ -27,21 +26,25 @@ namespace ServerBomberman
         public bool Move(Player player, int deltaX, int deltaY)
         {
 
-            if (player.X + deltaX >= GameState.GetLength(1) || player.X + deltaX <= 0 
+            if (player.X + deltaX >= GameState.GetLength(1) || player.X + deltaX <= 0
                 || player.Y + deltaY >= GameState.GetLength(0) || player.Y + deltaY <= 0)
             {
                 return false;
             }
 
-            GameState[player.Y, player.X] = new Emptiness(player.X, player.Y);
+            if (GameState[player.Y + deltaY, player.X + deltaX] is not Emptiness)
+                return false;
 
-            player.X += deltaX;
-            player.Y += deltaY;
+            if (DateTime.Now - player.MoveTimer > TimeSpan.FromMilliseconds(250))
+            {
+                player.X += deltaX;
+                player.Y += deltaY;
+                player.MoveTimer = DateTime.Now;
+                return true;
+            }
 
-            GameState[player.Y, player.X] = player;
 
-            return true;
-
+            return false;
         }
 
         public bool Connect(Player player)
@@ -71,7 +74,7 @@ namespace ServerBomberman
                 return id == Player1.ID ? Player1 : Player2;
         }
 
- 
+
         public void SessionTickController()
         {
             if (Milliseconds >= TicksPerSecond)

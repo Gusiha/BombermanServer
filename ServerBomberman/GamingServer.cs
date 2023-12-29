@@ -26,7 +26,7 @@ namespace ServerBomberman
 
         public GamingServer(int tickRate, IPAddress iPAddress, int port)
         {
-
+            Sessions = new List<Session>(5);
             TickRate = tickRate;
             TicksPerSecond = 1000 / tickRate;
 
@@ -95,10 +95,10 @@ namespace ServerBomberman
 
         public void StartMessageLoop()
         {
-            GameInterpreter gameInterpreter = new GameInterpreter();
 
             _ = Task.Run(async () =>
             {
+                GameInterpreter gameInterpreter = new GameInterpreter();
                 SocketReceiveFromResult result;
                 //while (true)
                 //{
@@ -111,31 +111,46 @@ namespace ServerBomberman
                     int[] response = gameInterpreter.Parse(message);
                     switch (response[2])
                     {
+                        case 0:
+                            {
+                                Session foundSession = null;
+                                foreach (var item in Sessions)
+                                {
+                                    if (item.FindPlayerById(gameInterpreter.PlayerID) != null)
+                                    {
+                                        foundSession = item;
+                                    }
+
+                                }
+                                gameInterpreter.DoAction(response, foundSession);
+
+                                break;
+                            }
+
                         case 1:
                             {
                                 bool success = false;
 
-                                for (int i = 0; i < 10; i++)
+                                for (int i = 0; i < Sessions.Count; i++)
                                 {
-                                    if (!GameInterpreter.ConnectPlayer(Sessions.Last()))
-                                    {
-                                        Sessions.Add(new Session());
-                                    }
 
-                                    else
+                                    if (GameInterpreter.ConnectPlayer(Sessions[i]))
                                     {
                                         success = true;
                                         break;
                                     }
+
                                 }
 
-                                if(!success)
-                                    await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes($"400 Failed to join session after 10 retries"));
+                                if (!success)
+                                    await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes($"400 Failed to join session. Sessions are fulled"));
 
 
 
                                 break;
                             }
+
+
                         case 400:
                             {
                                 //TODO Отравить сообщение об ошибке
