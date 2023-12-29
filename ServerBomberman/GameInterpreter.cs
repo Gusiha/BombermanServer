@@ -114,19 +114,18 @@ namespace ServerBomberman
         /// <param name="response">Contains XY coords. and code for invoking certain action</param>
         /// <param name="player">Player entity that performs the action</param>
         /// <param name="session">Active session the player belongs to</param>
-        /// <returns>Int array of two elements, where [0]: Action code; [1]: 0 for successful operation, -1 in case of a failure, or a corresponding error code</returns>
-        public int[] DoAction(int[] response, Session session)
+        /// <returns>Integer value 200 for successful operation, -1 in case of a failure, or a corresponding error code</returns>
+        public int DoAction(int[] response, Session session)
         {
             bool success = false;
 
             Player? player = session.FindPlayerById(PlayerID);
 
-            int[] finalResponse = new int[2];
-            finalResponse[0] = response[2];
+            int finalResponse;
 
             if (player == null)
             {
-                finalResponse[1] = 402;
+                finalResponse = 402;
                 return finalResponse;
             }
 
@@ -158,7 +157,7 @@ namespace ServerBomberman
                     }
             }
 
-            finalResponse[1] = success ? 0 : -1;
+            finalResponse = success ? 200 : 201;
             return finalResponse;
         }
     }
