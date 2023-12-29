@@ -96,7 +96,8 @@ namespace ServerBomberman
             while (true)
             {
                 //Inside [ServerTickController] you can place methods, which have to be done with certain tickrate
-                ServerTickController(StartMessageLoop);
+                ServerTickController(StartMessageLoop, Update);
+                
             }
 
         }
@@ -118,6 +119,7 @@ namespace ServerBomberman
 
         public void Update()
         {
+
             _ = Task.Run(async () =>
             {
                 foreach (var item in Sessions)
