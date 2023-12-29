@@ -96,8 +96,7 @@ namespace ServerBomberman
             while (true)
             {
                 //Inside [ServerTickController] you can place methods, which have to be done with certain tickrate
-                ServerTickController(StartMessageLoop, Update);
-                
+                ServerTickController(StartMessageLoop, Update);   
             }
 
         }
@@ -127,8 +126,8 @@ namespace ServerBomberman
                     if (item.IsGameStarted)
                     {
                         string gameState = item.ToString();
-                        await SendTo(item.Player1.EndPoint, Encoding.UTF8.GetBytes($"202 {gameState}"));
-                        await SendTo(item.Player2.EndPoint, Encoding.UTF8.GetBytes($"202 {gameState}"));
+                        await SendTo(item.Player1.EndPoint, Encoding.UTF8.GetBytes($"202 {gameState} {item.Player1.X} {item.Player1.Y} {item.Player2.X} {item.Player2.Y}"));
+                        await SendTo(item.Player2.EndPoint, Encoding.UTF8.GetBytes($"202 {gameState} {item.Player2.X} {item.Player2.Y} {item.Player1.X} {item.Player1.Y}"));
                     }
                 }
             });

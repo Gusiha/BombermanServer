@@ -131,6 +131,7 @@ namespace ServerBomberman
             {
                 gameState += item.EntityID.ToString();
                 gameState += " ";
+                
             }
 
             return gameState.TrimEnd();
