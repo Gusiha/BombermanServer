@@ -1,6 +1,5 @@
 ﻿using Bomberman.Classes;
 using System.Net;
-using System.Reflection.Metadata.Ecma335;
 
 namespace ServerBomberman
 {
@@ -47,51 +46,50 @@ namespace ServerBomberman
                 return response;
             }
 
-            if (strings.Length > 1)
+
+            try
             {
-                try
-                {
-                    PlayerID = new(strings[0]);
-                }
-                catch
-                {
-                    response[2] = 402;
-                    return response;
-                }
-                switch (strings[0])
-                {
-                    case "left":
-                        {
-                            --response[0];
-                            break;
-                        }
-                    case "right":
-                        {
-                            ++response[0];
-                            break;
-                        }
-                    case "up":
-                        {
-                            --response[1];
-                            break;
-                        }
-                    case "down":
-                        {
-                            ++response[1];
-                            break;
-                        }
-                    case "place":
-                        {
-                            response[2] = 4;
-                            break;
-                        }
-                    case "disconnect":
-                        {
-                            response[2] = 2;
-                            break;
-                        }
-                }
+                PlayerID = new(strings[1]);
             }
+            catch
+            {
+                response[2] = 402;
+                return response;
+            }
+            switch (strings[0])
+            {
+                case "left":
+                    {
+                        --response[0];
+                        break;
+                    }
+                case "right":
+                    {
+                        ++response[0];
+                        break;
+                    }
+                case "up":
+                    {
+                        --response[1];
+                        break;
+                    }
+                case "down":
+                    {
+                        ++response[1];
+                        break;
+                    }
+                case "place":
+                    {
+                        response[2] = 4;
+                        break;
+                    }
+                case "disconnect":
+                    {
+                        response[2] = 2;
+                        break;
+                    }
+            }
+
 
             return response;
         }
