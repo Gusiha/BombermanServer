@@ -103,12 +103,9 @@ namespace ServerBomberman
             return session.Connect(new Player(0, 0));
         }
 
-        public bool DisconnectPlayer(Session session)
+        public bool DisconnectPlayer(Session session, Player player)
         {
-            Player? player = session.FindPlayerById(PlayerID);
-            if(player != null)
-                return session.Disconnect(player);
-            return false;
+            return session.Disconnect(player);
         }
 
         /// <summary>
@@ -150,7 +147,7 @@ namespace ServerBomberman
                 // 2 for disconnect
                 case 2:
                     {
-                        //disconnect method
+                        success = DisconnectPlayer(session, player);
                         break;
                     }
                 // 3 for placing
