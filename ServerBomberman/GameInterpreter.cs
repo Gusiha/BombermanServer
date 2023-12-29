@@ -56,30 +56,26 @@ namespace ServerBomberman
                 response[2] = 402;
                 return response;
             }
-            response[2] = 400;
+
             switch (strings[0])
             {
                 case "left":
                     {
-                        response[2] = 0;
                         --response[0];
                         break;
                     }
                 case "right":
                     {
-                        response[2] = 0;
                         ++response[0];
                         break;
                     }
                 case "up":
                     {
-                        response[2] = 0;
                         --response[1];
                         break;
                     }
                 case "down":
                     {
-                        response[2] = 0;
                         ++response[1];
                         break;
                     }
@@ -91,6 +87,13 @@ namespace ServerBomberman
                 case "disconnect":
                     {
                         response[2] = 2;
+                        break;
+                    }
+
+
+                default:
+                    {
+                        response[2] = 400;
                         break;
                     }
             }
