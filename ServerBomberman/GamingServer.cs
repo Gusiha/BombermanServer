@@ -33,8 +33,6 @@ namespace ServerBomberman
                 Sessions.Add(new Session());
             }
 
-            Console.WriteLine(Sessions[0].ToString());
-
             TickRate = tickRate;
             TicksPerSecond = 1000 / tickRate;
 
@@ -94,7 +92,7 @@ namespace ServerBomberman
             //while (Sessions.Count > 0)
             while (true)
             {
-                //Inside [ServerTickController] you can place methods, which have to be done with certain tickrate
+                //Inside [ServerTickController] you can put methods, which have to be invoked with certain tickrate
                 ServerTickController(StartMessageLoop, Update);   
             }
         }
@@ -266,7 +264,7 @@ namespace ServerBomberman
                         break;
                 }
 
-                Console.WriteLine($"Recieved : {message} from {result.RemoteEndPoint}");
+                Console.WriteLine($"<- {message} [{result.RemoteEndPoint}]");
 
                 //Парсинг сообщения
                 //Ответ на сообщение (КОД сообщения + возможно тело и тд)
@@ -282,6 +280,7 @@ namespace ServerBomberman
         {
             var messageToSend = new ArraySegment<byte>(data);
             await socket.SendToAsync(messageToSend, recipient);
+            Console.WriteLine($"-> {Encoding.UTF8.GetString(messageToSend)} [{recipient}]");
         }
 
 

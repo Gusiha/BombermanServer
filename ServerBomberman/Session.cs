@@ -119,8 +119,6 @@ namespace ServerBomberman
                 await time;
                 Milliseconds = 0;
             }
-
-
         }
 
         public override string ToString()
