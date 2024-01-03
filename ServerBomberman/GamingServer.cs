@@ -139,6 +139,7 @@ namespace ServerBomberman
                 //{
                 result = await socket.ReceiveFromAsync(bufferSegment, SocketFlags.None, _endPoint);
                 var message = Encoding.UTF8.GetString(_buffer, 0, result.ReceivedBytes);
+                Console.WriteLine($"<- {message} [{result.RemoteEndPoint}]");
 
 
 
@@ -263,15 +264,14 @@ namespace ServerBomberman
                     default:
                         break;
                 }
-
-                Console.WriteLine($"<- {message} [{result.RemoteEndPoint}]");
-
+     
                 //Парсинг сообщения
                 //Ответ на сообщение (КОД сообщения + возможно тело и тд)
                 //await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes("Hello from Server"));
                 //}
 
             });
+            
         }
 
 

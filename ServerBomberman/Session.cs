@@ -64,17 +64,20 @@ namespace ServerBomberman
                     Player1 = player;
                     Player1.X = 3;
                     Player1.Y = 5;
+                    PlayerAmount++;
                     return true;
 
                 case 1:
                     Player2 = player;
                     Player2.X = 10;
                     Player2.Y = 5;
+                    IsGameStarted = true;
                     return true;
 
                 default:
                     return false;
             }
+
         }
 
         public bool Disconnect(Player player)
@@ -129,7 +132,7 @@ namespace ServerBomberman
             {
                 gameState += item.EntityID.ToString();
                 gameState += " ";
-                
+
             }
 
             return gameState.TrimEnd();
