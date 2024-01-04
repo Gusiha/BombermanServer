@@ -87,13 +87,13 @@ namespace ServerBomberman
 
         public void GameLoopAsync()
         {
-            Stopwatch timer = Stopwatch.StartNew();
 
             //while (Sessions.Count > 0)
             while (true)
             {
                 //Inside [ServerTickController] you can put methods, which have to be invoked with certain tickrate
-                ServerTickController(StartMessageLoop, Update);   
+                ServerTickController(StartMessageLoop, Update);
+                
             }
         }
 
