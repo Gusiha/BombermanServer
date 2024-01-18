@@ -44,7 +44,7 @@ namespace ServerBomberman
             if (GameState[player.Y + deltaY, player.X + deltaX] is not Emptiness)
                 return false;
 
-            if (DateTime.Now - player.MoveTimer > TimeSpan.FromMilliseconds(250))
+            if (DateTime.Now - player.MoveTimer > TimeSpan.FromMilliseconds(10))
             {
                 player.X += deltaX;
                 player.Y += deltaY;
@@ -58,6 +58,8 @@ namespace ServerBomberman
 
         public bool Connect(Player player)
         {
+            //to be able to launch the game with one player
+            IsGameStarted = true;
             switch (PlayerAmount)
             {
                 case 0:
@@ -71,13 +73,14 @@ namespace ServerBomberman
                     Player2 = player;
                     Player2.X = 10;
                     Player2.Y = 5;
-                    IsGameStarted = true;
+                    //IsGameStarted = true;
                     return true;
 
                 default:
                     return false;
             }
 
+            
         }
 
         public bool Disconnect(Player player)

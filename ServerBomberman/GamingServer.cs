@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using Bomberman.Classes;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -122,8 +123,16 @@ namespace ServerBomberman
                     if (item.IsGameStarted)
                     {
                         string gameState = item.ToString();
-                        await SendTo(item.Player1.EndPoint, Encoding.UTF8.GetBytes($"202 {gameState} {item.Player1.X} {item.Player1.Y} {item.Player2.X} {item.Player2.Y}"));
-                        await SendTo(item.Player2.EndPoint, Encoding.UTF8.GetBytes($"202 {gameState} {item.Player2.X} {item.Player2.Y} {item.Player1.X} {item.Player1.Y}"));
+
+                        if (item.Player2 == null)
+                            await SendTo(item.Player1.EndPoint, Encoding.UTF8.GetBytes($"202 {gameState} {item.Player1.X} {item.Player1.Y} {10} {5}"));
+
+                        else
+                        {
+                            await SendTo(item.Player1.EndPoint, Encoding.UTF8.GetBytes($"202 {gameState} {item.Player1.X} {item.Player1.Y} {item.Player2.X} {item.Player2.Y}"));
+                            await SendTo(item.Player2.EndPoint, Encoding.UTF8.GetBytes($"202 {gameState} {item.Player2.X} {item.Player2.Y} {item.Player1.X} {item.Player1.Y}"));
+                        }
+                       
                     }
                 }
             });
