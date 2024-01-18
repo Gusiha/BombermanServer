@@ -16,6 +16,9 @@ namespace ServerBomberman
                     GameState[i, j] = new Emptiness(j,i);
                 }
             }
+
+            GameState[4, 6] = new SolidBlock(4,6);
+
         }
 
         public int Milliseconds { get; set; }
@@ -41,10 +44,12 @@ namespace ServerBomberman
                 return false;
             }
 
+
             if (GameState[player.Y + deltaY, player.X + deltaX] is not Emptiness)
                 return false;
 
-            if (DateTime.Now - player.MoveTimer > TimeSpan.FromMilliseconds(10))
+
+            if (DateTime.Now - player.MoveTimer > TimeSpan.FromMilliseconds(150))
             {
                 player.X += deltaX;
                 player.Y += deltaY;
