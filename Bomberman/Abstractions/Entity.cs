@@ -23,7 +23,7 @@ namespace Bomberman.Abstractions
 
 
 
-        public void Hide()
+        public virtual void Hide()
         {
             State = States.Hidden;
         }

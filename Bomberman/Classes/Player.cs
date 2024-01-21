@@ -6,28 +6,37 @@ namespace Bomberman.Classes
 {
     public class Player : Entity, IMovable, IDestroyable
     {
-        public DateTime BombTimer { get; set; }
         public DateTime MoveTimer { get; set; }
+        public DateTime DeathTime { get; private set; }
+
 
         public EndPoint EndPoint { get; private set; }
 
+        public List<Bomb> Bombs { get; set; } = new List<Bomb>();
+
+        public int BombAmount { get; set; } = 2;
 
         public Guid ID { get; private set; }
 
+        public int BombRange { get; set; } = 1;
 
         public Player(int startX, int startY, EndPoint endPoint) : base(startX, startY, 2)
         {
             EndPoint = endPoint;
             ID = Guid.NewGuid();
-            BombTimer = DateTime.Now;
             MoveTimer = DateTime.Now;
+            
+            for (int i = 0; i < BombAmount; i++)
+            {
+                Bombs.Add(new Bomb());
+            }
         }
+
 
         public void Destroy()
         {
-
-
-            throw new NotImplementedException();
+            State = States.Destroyed;
+            DeathTime = DateTime.Now;
         }
 
 

@@ -1,26 +1,36 @@
 ﻿using Bomberman.Abstractions;
 using Bomberman.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Bomberman.Classes
 {
     public class Bomb : Entity, IMovable
     {
-        protected Bomb(int startX, int startY) : base(startX, startY, 3)
+        public DateTime BombTimer { get; set; }
+
+        public bool IsPlaced { get; set; } = false;
+        public Bomb(int startX, int startY) : base(startX, startY, 3)
         {
 
         }
 
-        public int Range { get; set; }
-
-        public void Explode()
+        public Bomb() : base(0,0,3)
         {
 
         }
+
+
+        public bool IsTimerElapsed()
+        {
+            if (DateTime.Now - BombTimer >= TimeSpan.FromMilliseconds(3000))
+            {
+                return true;
+
+            }
+            return false;
+        }
+
+
+
 
         public void Move(Directions direction, int stepX, int stepY)
         {

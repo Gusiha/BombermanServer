@@ -211,6 +211,111 @@ namespace ServerBomberman
         }
 
 
+        public void PlaceBomb(Player player)
+        {
+            if (player.BombAmount == 0 || player == null || GameState[player.X, player.Y] is not Emptiness)
+            {
+                return;
+            }
+
+            foreach (var item in player.Bombs)
+            {
+                if (!item.IsPlaced)
+                {
+                    continue;
+                }
+
+                GameState[player.X, player.Y] = item;
+                item.X = player.X;
+                item.Y = player.Y;
+                item.IsPlaced = true;
+                item.BombTimer = DateTime.Now;
+                player.BombAmount--;
+                return;
+            }
+        }
+
+
+        public void ActivateBomb()
+        {
+
+            if (Player1 != null)
+            {
+                foreach (var item in Player1.Bombs)
+                {
+                    if (item.IsTimerElapsed() && item.IsPlaced)
+                    {
+                        item.IsPlaced = false;
+                        GameState[item.X, item.Y] = new Emptiness(item.X, item.Y);
+
+                        for (int i = 1; i <= Player1.BombRange; i++)
+                        {
+                            ExplodeCell(item.X, item.Y + i);
+                            ExplodeCell(item.X + i, item.Y);
+                            ExplodeCell(item.X, item.Y - i);
+                            ExplodeCell(item.X - i, item.Y);
+                        }
+
+                        Player1.BombAmount++;
+                    }
+                } 
+            }
+
+            if (Player2 != null)
+            {
+                foreach (var item in Player2.Bombs)
+                {
+                    if (item.IsTimerElapsed() && item.IsPlaced)
+                    {
+                        item.IsPlaced = false;
+                        GameState[item.X, item.Y] = new Emptiness(item.X, item.Y);
+
+                        for (int i = 1; i <= Player2.BombRange; i++)
+                        {
+                            ExplodeCell(item.X, item.Y + i);
+                            ExplodeCell(item.X + i, item.Y);
+                            ExplodeCell(item.X, item.Y - i);
+                            ExplodeCell(item.X - i, item.Y);
+                        }
+
+                        Player2.BombAmount++;
+                    }
+                } 
+            }
+        }
+
+        private void ExplodeCell(int x, int y)
+        {
+            IDestroyable? destroyableEntity = null;
+
+            if (x < 0 || x >= GameState.GetLength(0) || y < 0 || y >= GameState.GetLength(1))
+            {
+                return;
+            }
+
+            if (Player1?.X == x && Player1?.Y == y)
+            {
+                Player1.Destroy();
+            }
+
+            if (Player2?.X == x && Player2?.Y == y)
+            {
+                Player2.Destroy();
+            }
+
+            if (GameState[x, y] is IDestroyable)
+            {
+                destroyableEntity = GameState[x, y] as IDestroyable;
+            }
+
+            if (destroyableEntity != null)
+            {
+                destroyableEntity.Destroy();
+                GameState[x, y] = new Emptiness(x, y);
+            }
+
+        }
+
 
         public bool Connect(Player player)
         {

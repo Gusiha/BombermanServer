@@ -122,6 +122,7 @@ namespace ServerBomberman
                 {
                     if (item.IsGameStarted)
                     {
+                        item.ActivateBomb();
                         string gameState = item.ToString();
 
                         if (item.Player2 == null)
