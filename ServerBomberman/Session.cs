@@ -38,8 +38,8 @@ namespace ServerBomberman
         public bool Move(Player player, int deltaX, int deltaY)
         {
 
-            if (player.X + deltaX >= GameState.GetLength(0) || player.X + deltaX <= 0
-                || player.Y + deltaY >= GameState.GetLength(1) || player.Y + deltaY <= 0)
+            if (player.X + deltaX >= GameState.GetLength(0) || player.X + deltaX < 0
+                || player.Y + deltaY >= GameState.GetLength(1) || player.Y + deltaY < 0)
             {
                 return false;
             }
