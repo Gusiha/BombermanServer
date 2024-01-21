@@ -8,16 +8,16 @@ namespace ServerBomberman
         public Session()
         {
             IsGameEnded = false;
-            GameState = new Entity[11, 13];
+            GameState = new Entity[13, 11];
             for (int i = 0; i < GameState.GetLength(0); i++)
             {
                 for (int j = 0; j < GameState.GetLength(1); j++)
                 {
-                    GameState[i, j] = new Emptiness(j,i);
+                    GameState[i, j] = new Emptiness(i,j);
                 }
             }
 
-            GameState[4, 6] = new SolidBlock(4,6);
+            GameState[1, 1] = new SolidBlock(1,1);
 
         }
 
@@ -38,14 +38,14 @@ namespace ServerBomberman
         public bool Move(Player player, int deltaX, int deltaY)
         {
 
-            if (player.X + deltaX >= GameState.GetLength(1) || player.X + deltaX <= 0
-                || player.Y + deltaY >= GameState.GetLength(0) || player.Y + deltaY <= 0)
+            if (player.X + deltaX >= GameState.GetLength(0) || player.X + deltaX <= 0
+                || player.Y + deltaY >= GameState.GetLength(1) || player.Y + deltaY <= 0)
             {
                 return false;
             }
 
 
-            if (GameState[player.Y + deltaY, player.X + deltaX] is not Emptiness)
+            if (GameState[player.X + deltaX, player.Y + deltaY] is not Emptiness)
                 return false;
 
 
