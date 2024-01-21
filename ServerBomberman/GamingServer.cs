@@ -125,7 +125,9 @@ namespace ServerBomberman
                         string gameState = item.ToString();
 
                         if (item.Player2 == null)
+                        {
                             await SendTo(item.Player1.EndPoint, Encoding.UTF8.GetBytes($"202 {gameState} {item.Player1.X} {item.Player1.Y} {10} {5}"));
+                        }
 
                         else
                         {

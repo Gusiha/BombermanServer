@@ -13,11 +13,45 @@ namespace ServerBomberman
             {
                 for (int j = 0; j < GameState.GetLength(1); j++)
                 {
-                    GameState[i, j] = new Emptiness(i,j);
+                    GameState[i, j] = new Emptiness(i, j);
                 }
             }
 
-            GameState[1, 1] = new SolidBlock(1,1);
+            GameState[1, 1] = new SolidBlock(1, 1);
+            GameState[1, 3] = new SolidBlock(1, 3);
+            GameState[1, 5] = new SolidBlock(1, 5);
+            GameState[1, 7] = new SolidBlock(1, 7);
+            GameState[1, 9] = new SolidBlock(1, 9);
+
+            GameState[3, 1] = new SolidBlock(3, 1);
+            GameState[3, 3] = new SolidBlock(3, 3);
+            GameState[3, 5] = new SolidBlock(3, 5);
+            GameState[3, 7] = new SolidBlock(3, 7);
+            GameState[3, 9] = new SolidBlock(3, 9);
+
+            GameState[5, 1] = new SolidBlock(5, 1);
+            GameState[5, 3] = new SolidBlock(5, 3);
+            GameState[5, 5] = new SolidBlock(5, 5);
+            GameState[5, 7] = new SolidBlock(5, 7);
+            GameState[5, 9] = new SolidBlock(5, 9);
+
+            GameState[7, 1] = new SolidBlock(7, 1);
+            GameState[7, 3] = new SolidBlock(7, 3);
+            GameState[7, 5] = new SolidBlock(7, 5);
+            GameState[7, 7] = new SolidBlock(7, 7);
+            GameState[7, 9] = new SolidBlock(7, 9);
+
+            GameState[9, 1] = new SolidBlock(9, 1);
+            GameState[9, 3] = new SolidBlock(9, 3);
+            GameState[9, 5] = new SolidBlock(9, 5);
+            GameState[9, 7] = new SolidBlock(9, 7);
+            GameState[9, 9] = new SolidBlock(9, 9);
+
+            GameState[11, 1] = new SolidBlock(11, 1);
+            GameState[11, 3] = new SolidBlock(11, 3);
+            GameState[11, 5] = new SolidBlock(11, 5);
+            GameState[11, 7] = new SolidBlock(11, 7);
+            GameState[11, 9] = new SolidBlock(11, 9);
 
         }
 
@@ -39,7 +73,7 @@ namespace ServerBomberman
         {
 
             if (player.X + deltaX >= GameState.GetLength(0) || player.X + deltaX < 0
-                || player.Y + deltaY >= GameState.GetLength(1) || player.Y + deltaY < 0)
+                    || player.Y + deltaY >= GameState.GetLength(1) || player.Y + deltaY < 0)
             {
                 return false;
             }
@@ -49,6 +83,28 @@ namespace ServerBomberman
                 return false;
 
 
+            if (Player2 != null && Player1 != null)
+            {
+                if (player.ID == Player1.ID)
+                {
+                    if (GameState[player.X + deltaX, player.Y + deltaY] == GameState[Player2.X, Player2.Y])
+                    {
+                        return false;
+                    }
+                }
+
+
+                if (player.ID == Player2.ID)
+                {
+                    if (GameState[player.X + deltaX, player.Y + deltaY] == GameState[Player1.X, Player1.Y])
+                    {
+                        return false;
+                    }
+                }
+
+            }
+
+
             if (DateTime.Now - player.MoveTimer > TimeSpan.FromMilliseconds(150))
             {
                 player.X += deltaX;
@@ -56,10 +112,10 @@ namespace ServerBomberman
                 player.MoveTimer = DateTime.Now;
                 return true;
             }
-
-
             return false;
         }
+
+
 
         public bool Connect(Player player)
         {
@@ -85,7 +141,7 @@ namespace ServerBomberman
                     return false;
             }
 
-            
+
         }
 
         public bool Disconnect(Player player)
