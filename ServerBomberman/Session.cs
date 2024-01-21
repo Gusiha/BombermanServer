@@ -53,6 +53,101 @@ namespace ServerBomberman
             GameState[11, 7] = new SolidBlock(11, 7);
             GameState[11, 9] = new SolidBlock(11, 9);
 
+            GameState[0, 3] = new BreakableBlock(0, 3);
+            GameState[0, 4] = new BreakableBlock(0, 4);
+            GameState[0, 5] = new BreakableBlock(0, 5);
+            GameState[0, 6] = new BreakableBlock(0, 6);
+            GameState[0, 7] = new BreakableBlock(0, 7);
+            GameState[0, 9] = new BreakableBlock(0, 9);
+            GameState[0, 10] = new BreakableBlock(0, 10);
+
+            GameState[1, 4] = new BreakableBlock(1, 4);
+            GameState[1, 6] = new BreakableBlock(1, 6);
+            GameState[1, 8] = new BreakableBlock(1, 8);
+            GameState[1, 10] = new BreakableBlock(1, 10);
+
+            GameState[2, 0] = new BreakableBlock(2, 0);
+            GameState[2, 2] = new BreakableBlock(2, 2);
+            GameState[2, 6] = new BreakableBlock(2, 6);
+            GameState[2, 7] = new BreakableBlock(2, 7);
+            GameState[2, 8] = new BreakableBlock(2, 8);
+            GameState[2, 9] = new BreakableBlock(2, 9);
+
+            GameState[3, 0] = new BreakableBlock(3, 0);
+            GameState[3, 2] = new BreakableBlock(3, 2);
+            GameState[3, 4] = new BreakableBlock(3, 4);
+            GameState[3, 10] = new BreakableBlock(3, 10);
+
+            GameState[4, 0] = new BreakableBlock(4, 0);
+            GameState[4, 1] = new BreakableBlock(4, 1);
+            GameState[4, 2] = new BreakableBlock(4, 2);
+            GameState[4, 3] = new BreakableBlock(4, 3);
+            GameState[4, 5] = new BreakableBlock(4, 5);
+            GameState[4, 6] = new BreakableBlock(4, 6);
+            GameState[4, 8] = new BreakableBlock(4, 8);
+            GameState[4, 9] = new BreakableBlock(4, 9);
+
+            GameState[5, 0] = new BreakableBlock(5, 0);
+            GameState[5, 2] = new BreakableBlock(5, 2);
+            GameState[5, 4] = new BreakableBlock(5, 4);
+            GameState[5, 6] = new BreakableBlock(5, 6);
+            GameState[5, 8] = new BreakableBlock(5, 8);
+
+            GameState[6, 0] = new BreakableBlock(6, 0);
+            GameState[6, 1] = new BreakableBlock(6, 1);
+            GameState[6, 2] = new BreakableBlock(6, 2);
+            GameState[6, 4] = new BreakableBlock(6, 4);
+            GameState[6, 5] = new BreakableBlock(6, 5);
+            GameState[6, 6] = new BreakableBlock(6, 6);
+            GameState[6, 7] = new BreakableBlock(6, 7);
+            GameState[6, 8] = new BreakableBlock(6, 8);
+            GameState[6, 10] = new BreakableBlock(6, 10);
+
+            GameState[7, 0] = new BreakableBlock(7, 0);
+            GameState[7, 2] = new BreakableBlock(7, 2);
+            GameState[7, 4] = new BreakableBlock(7, 4);
+            GameState[7, 6] = new BreakableBlock(7, 6);
+            GameState[7, 8] = new BreakableBlock(7, 8);
+
+
+            GameState[8, 2] = new BreakableBlock(8, 2);
+            GameState[8, 3] = new BreakableBlock(8, 3);
+            GameState[8, 4] = new BreakableBlock(8, 4);
+            GameState[8, 5] = new BreakableBlock(8, 5);
+            GameState[8, 6] = new BreakableBlock(8, 6);
+            GameState[8, 7] = new BreakableBlock(8, 7);
+            GameState[8, 8] = new BreakableBlock(8, 8);
+            GameState[8, 10] = new BreakableBlock(8, 10);
+
+            GameState[9, 0] = new BreakableBlock(9, 0);
+            GameState[9, 2] = new BreakableBlock(9, 2);
+            GameState[9, 4] = new BreakableBlock(9, 4);
+            GameState[9, 6] = new BreakableBlock(9, 6);
+            GameState[9, 10] = new BreakableBlock(9, 10);
+
+            GameState[10, 0] = new BreakableBlock(10, 0);
+            GameState[10, 2] = new BreakableBlock(10, 2);
+            GameState[10, 3] = new BreakableBlock(10, 3);
+            GameState[10, 4] = new BreakableBlock(10, 4);
+            GameState[10, 5] = new BreakableBlock(10, 5);
+            GameState[10, 6] = new BreakableBlock(10, 6);
+            GameState[10, 8] = new BreakableBlock(10, 8);
+            GameState[10, 10] = new BreakableBlock(10, 10);
+
+            GameState[11, 0] = new BreakableBlock(11, 0);
+            GameState[11, 2] = new BreakableBlock(11, 2);
+            GameState[11, 4] = new BreakableBlock(11, 4);
+            GameState[11, 8] = new BreakableBlock(11, 8);
+
+            GameState[12, 0] = new BreakableBlock(12, 0);
+            GameState[12, 1] = new BreakableBlock(12, 1);
+            GameState[12, 2] = new BreakableBlock(12, 2);
+            GameState[12, 3] = new BreakableBlock(12, 3);
+            GameState[12, 4] = new BreakableBlock(12, 4);
+            GameState[12, 5] = new BreakableBlock(12, 5);
+            GameState[12, 6] = new BreakableBlock(12, 6);
+            GameState[12, 7] = new BreakableBlock(12, 7);
+
         }
 
         public int Milliseconds { get; set; }
@@ -125,15 +220,15 @@ namespace ServerBomberman
             {
                 case 0:
                     Player1 = player;
-                    Player1.X = 3;
-                    Player1.Y = 5;
+                    Player1.X = 0;
+                    Player1.Y = 0;
                     PlayerAmount++;
                     return true;
 
                 case 1:
                     Player2 = player;
-                    Player2.X = 10;
-                    Player2.Y = 5;
+                    Player2.X = 12;
+                    Player2.Y = 10;
                     //IsGameStarted = true;
                     return true;
 
