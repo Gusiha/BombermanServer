@@ -1,5 +1,4 @@
-﻿using Bomberman.Classes;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -94,7 +93,7 @@ namespace ServerBomberman
             {
                 //Inside [ServerTickController] you can put methods, which have to be invoked with certain tickrate
                 ServerTickController(StartMessageLoop, Update);
-                
+
             }
         }
 
@@ -122,7 +121,7 @@ namespace ServerBomberman
                 {
                     if (item.IsGameStarted)
                     {
-                        item.ActivateBomb();
+                        item.ActivateBombs();
                         string gameState = item.ToString();
 
                         if (item.Player2 == null)
@@ -135,7 +134,7 @@ namespace ServerBomberman
                             await SendTo(item.Player1.EndPoint, Encoding.UTF8.GetBytes($"202 {gameState} {item.Player1.X} {item.Player1.Y} {item.Player2.X} {item.Player2.Y}"));
                             await SendTo(item.Player2.EndPoint, Encoding.UTF8.GetBytes($"202 {gameState} {item.Player2.X} {item.Player2.Y} {item.Player1.X} {item.Player1.Y}"));
                         }
-                       
+
                     }
                 }
             });
@@ -165,7 +164,7 @@ namespace ServerBomberman
 
                             if (foundSession is null)
                             {
-                                await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes($"400 Failed to move"));
+                                await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes($"400 Failed to move. Session not found"));
                                 break;
                             }
 
@@ -253,10 +252,50 @@ namespace ServerBomberman
                             }
                         }
                     //PlaceBomb
-                    case 4:
+                    case 3:
                         {
 
-                            break;
+                            Session? session = FindSessionByPlayerID(gameInterpreter.PlayerID);
+
+                            if (session is null)
+                            {
+                                await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes($"400 Failed to place the bomb (session not found)"));
+                                break;
+                            }
+
+                            else
+                            {
+                                int messageCode = gameInterpreter.DoAction(response, session);
+
+                                switch (messageCode)
+                                {
+                                    case 200:
+                                        {
+                                            if (gameInterpreter.PlayerID == session.Player1.ID)
+                                            {
+                                                await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes($"{messageCode} Bomb deployed by {gameInterpreter.PlayerID} at [{session.Player1.X}][{session.Player1.Y}]"));
+                                            }
+
+                                            else
+                                            {
+                                                await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes($"{messageCode} Bomb deployed by {gameInterpreter.PlayerID} at [{session.Player2.X}][{session.Player2.Y}]"));
+                                            }
+
+                                            break;
+                                        }
+
+                                    case 201:
+                                        {
+                                            await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes($"{messageCode} {gameInterpreter.PlayerID} couldn't place the bomb"));
+                                            break;
+                                        }
+
+                                    default:
+                                        break;
+                                }
+
+                                break;
+                            }
                         }
 
 
@@ -276,14 +315,14 @@ namespace ServerBomberman
                     default:
                         break;
                 }
-     
+
                 //Парсинг сообщения
                 //Ответ на сообщение (КОД сообщения + возможно тело и тд)
                 //await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes("Hello from Server"));
                 //}
 
             });
-            
+
         }
 
 

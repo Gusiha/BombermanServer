@@ -81,7 +81,7 @@ namespace ServerBomberman
                     }
                 case "place":
                     {
-                        response[2] = 4;
+                        response[2] = 3;
                         break;
                     }
                 case "disconnect":
@@ -169,7 +169,7 @@ namespace ServerBomberman
                 // 3 for placing
                 case 3:
                     {
-                        //place method
+                        success = session.PlaceBomb(player);
                         break;
                     }
             }

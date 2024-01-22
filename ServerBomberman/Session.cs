@@ -211,16 +211,16 @@ namespace ServerBomberman
         }
 
 
-        public void PlaceBomb(Player player)
+        public bool PlaceBomb(Player player)
         {
             if (player.BombAmount == 0 || player == null || GameState[player.X, player.Y] is not Emptiness)
             {
-                return;
+                return false;
             }
 
             foreach (var item in player.Bombs)
             {
-                if (!item.IsPlaced)
+                if (item.IsPlaced)
                 {
                     continue;
                 }
@@ -231,12 +231,14 @@ namespace ServerBomberman
                 item.IsPlaced = true;
                 item.BombTimer = DateTime.Now;
                 player.BombAmount--;
-                return;
+                return true;
             }
+
+            return false;
         }
 
 
-        public void ActivateBomb()
+        public void ActivateBombs()
         {
 
             if (Player1 != null)
