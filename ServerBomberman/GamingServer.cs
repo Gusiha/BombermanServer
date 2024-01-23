@@ -119,6 +119,27 @@ namespace ServerBomberman
             {
                 foreach (var item in Sessions)
                 {
+                    if (item.IsGameEnded)
+                    {
+                        if (item.Player1.State == Bomberman.Enums.States.Destroyed)
+                        {
+                            if (item.Player1 != null)
+                                await SendTo(item.Player1.EndPoint, Encoding.UTF8.GetBytes($"204 0"));
+                            if (item.Player2 != null)
+                                await SendTo(item.Player2.EndPoint, Encoding.UTF8.GetBytes($"204 1"));
+                        }
+
+                        else
+                        {
+                            if (item.Player1 != null)
+                                await SendTo(item.Player1.EndPoint, Encoding.UTF8.GetBytes($"204 1"));
+                            if (item.Player2 != null)
+                                await SendTo(item.Player2.EndPoint, Encoding.UTF8.GetBytes($"204 0"));
+                        }
+
+                        UpdateSessions();
+                    }
+
                     if (item.IsGameStarted)
                     {
                         item.ActivateBombs();
@@ -134,7 +155,6 @@ namespace ServerBomberman
                             await SendTo(item.Player1.EndPoint, Encoding.UTF8.GetBytes($"202 {gameState} {item.Player1.X} {item.Player1.Y} {item.Player2.X} {item.Player2.Y}"));
                             await SendTo(item.Player2.EndPoint, Encoding.UTF8.GetBytes($"202 {gameState} {item.Player2.X} {item.Player2.Y} {item.Player1.X} {item.Player1.Y}"));
                         }
-
                     }
                 }
             });
@@ -296,6 +316,8 @@ namespace ServerBomberman
 
                                 break;
                             }
+
+
                         }
 
 
@@ -325,7 +347,16 @@ namespace ServerBomberman
 
         }
 
-
+        private void UpdateSessions()
+        {
+            for (int i = 0; i < Sessions.Count; i++)
+            {
+                if (Sessions[i].IsGameEnded)
+                {
+                    Sessions[i] = new Session();
+                }
+            }
+        }
 
         public async Task SendTo(EndPoint recipient, byte[] data)
         {

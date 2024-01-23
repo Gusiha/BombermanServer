@@ -9,6 +9,7 @@ namespace ServerBomberman
         {
             IsGameEnded = false;
             GameState = new Entity[13, 11];
+
             for (int i = 0; i < GameState.GetLength(0); i++)
             {
                 for (int j = 0; j < GameState.GetLength(1); j++)
@@ -260,7 +261,7 @@ namespace ServerBomberman
 
                         Player1.BombAmount++;
                     }
-                } 
+                }
             }
 
             if (Player2 != null)
@@ -282,7 +283,7 @@ namespace ServerBomberman
 
                         Player2.BombAmount++;
                     }
-                } 
+                }
             }
         }
 
@@ -298,11 +299,18 @@ namespace ServerBomberman
             if (Player1?.X == x && Player1?.Y == y)
             {
                 Player1.Destroy();
+                IsGameEnded = true;
+                IsGameStarted = false;
             }
 
-            if (Player2?.X == x && Player2?.Y == y)
+            if (Player2 != null)
             {
-                Player2.Destroy();
+                if (Player2?.X == x && Player2?.Y == y)
+                {
+                    Player2.Destroy();
+                    IsGameEnded = true;
+                    IsGameStarted = false;
+                }
             }
 
             if (GameState[x, y] is IDestroyable)
@@ -355,8 +363,24 @@ namespace ServerBomberman
             return true;
         }
 
+        public void Disconnect()
+        {
+            Player1 = null;
+            Player2 = null;
+            IsGameEnded = true;
+            IsGameStarted = false;
+
+            return;
+        }
+
         public Player? FindPlayerById(Guid id)
         {
+
+            if (Player1 == null && Player2 == null)
+            {
+                return null;
+            }
+
             if (id != Player1.ID && id != Player2.ID)
                 return null;
             else
