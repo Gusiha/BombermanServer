@@ -219,13 +219,11 @@ namespace ServerBomberman
 
                             for (int i = 0; i < Sessions.Count; i++)
                             {
-
-                                if (gameInterpreter.ConnectPlayer(Sessions[i], result.RemoteEndPoint))
+                                if (Sessions[i].PlayerAmount <= 1 && gameInterpreter.ConnectPlayer(Sessions[i], result.RemoteEndPoint))
                                 {
                                     success = true;
                                     break;
                                 }
-
                             }
 
                             if (!success)

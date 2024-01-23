@@ -344,6 +344,7 @@ namespace ServerBomberman
                     Player2 = player;
                     Player2.X = 12;
                     Player2.Y = 10;
+                    PlayerAmount++;
                     //IsGameStarted = true;
                     return true;
 
@@ -381,7 +382,7 @@ namespace ServerBomberman
                 return null;
             }
 
-            if (id != Player1.ID && id != Player2.ID)
+            if (Player1 != null && Player2 != null && id != Player1.ID && id != Player2.ID)
                 return null;
             else
                 return id == Player1.ID ? Player1 : Player2;
