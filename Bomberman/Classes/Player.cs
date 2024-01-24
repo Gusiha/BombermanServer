@@ -8,7 +8,7 @@ namespace Bomberman.Classes
     {
         public DateTime MoveTimer { get; set; }
         public DateTime DeathTime { get; private set; }
-
+        public DateTime LastConnectionUpdateTime { get; set; }
 
         public EndPoint EndPoint { get; private set; }
 
@@ -25,7 +25,7 @@ namespace Bomberman.Classes
             EndPoint = endPoint;
             ID = Guid.NewGuid();
             MoveTimer = DateTime.Now;
-            
+            LastConnectionUpdateTime = DateTime.Now;
             for (int i = 0; i < BombAmount; i++)
             {
                 Bombs.Add(new Bomb());
@@ -51,5 +51,14 @@ namespace Bomberman.Classes
         {
             throw new NotImplementedException();
         }
+
+        public bool IsPlayerConnected()
+        {
+            if (DateTime.Now - LastConnectionUpdateTime > TimeSpan.FromMilliseconds(5000))
+                return false;
+            return true;
+        }
+
+
     }
 }

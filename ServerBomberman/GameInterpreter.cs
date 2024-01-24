@@ -89,6 +89,11 @@ namespace ServerBomberman
                         response[2] = 2;
                         break;
                     }
+                case "ping":
+                    {
+                        response[2] = 4;
+                        break;
+                    }
 
 
                 default:
@@ -111,7 +116,7 @@ namespace ServerBomberman
         {
             Player player = new Player(0, 0, endPoint);
             bool success = session.Connect(player);
-            if(success)
+            if (success)
             {
                 PlayerID = player.ID;
                 return true;
@@ -170,6 +175,12 @@ namespace ServerBomberman
                 case 3:
                     {
                         success = session.PlaceBomb(player);
+                        break;
+                    }
+                // 4 for ping
+                case 4:
+                    {
+                        success = session.UpdatePlayerConnection(player);
                         break;
                     }
             }

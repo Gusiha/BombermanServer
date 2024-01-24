@@ -119,46 +119,91 @@ namespace ServerBomberman
             {
                 foreach (var item in Sessions)
                 {
-                    if (item.IsGameEnded)
-                    {
-                        if (item.Player1.State == Bomberman.Enums.States.Destroyed)
-                        {
-                            if (item.Player1 != null)
-                                await SendTo(item.Player1.EndPoint, Encoding.UTF8.GetBytes($"204 0"));
-                            if (item.Player2 != null)
-                                await SendTo(item.Player2.EndPoint, Encoding.UTF8.GetBytes($"204 1"));
-                        }
-
-                        else
-                        {
-                            if (item.Player1 != null)
-                                await SendTo(item.Player1.EndPoint, Encoding.UTF8.GetBytes($"204 1"));
-                            if (item.Player2 != null)
-                                await SendTo(item.Player2.EndPoint, Encoding.UTF8.GetBytes($"204 0"));
-                        }
-
-                        UpdateSessions();
-                    }
-
                     if (item.IsGameStarted)
                     {
                         item.ActivateBombs();
-                        string gameState = item.ToString();
+                        await SendLatestGamestate(item);
+                        await CheckClientConnections(item);
+                    }
 
-                        if (item.Player2 == null)
-                        {
-                            await SendTo(item.Player1.EndPoint, Encoding.UTF8.GetBytes($"202 {gameState} {item.Player1.X} {item.Player1.Y} {10} {5}"));
-                        }
-
-                        else
-                        {
-                            await SendTo(item.Player1.EndPoint, Encoding.UTF8.GetBytes($"202 {gameState} {item.Player1.X} {item.Player1.Y} {item.Player2.X} {item.Player2.Y}"));
-                            await SendTo(item.Player2.EndPoint, Encoding.UTF8.GetBytes($"202 {gameState} {item.Player2.X} {item.Player2.Y} {item.Player1.X} {item.Player1.Y}"));
-                        }
+                    if (item.IsGameEnded)
+                    {
+                        await SendEndGameMessages(item);
+                        UpdateSessionPool();
                     }
                 }
             });
         }
+
+        private async Task SendEndGameMessages(Session item)
+        {
+
+            if (item.Player1.State == Bomberman.Enums.States.Destroyed)
+            {
+                if (item.Player1 != null)
+                    await SendTo(item.Player1.EndPoint, Encoding.UTF8.GetBytes($"204 0"));
+                if (item.Player2 != null)
+                    await SendTo(item.Player2.EndPoint, Encoding.UTF8.GetBytes($"204 1"));
+            }
+
+            else
+            {
+                if (item.Player1 != null)
+                    await SendTo(item.Player1.EndPoint, Encoding.UTF8.GetBytes($"204 1"));
+                if (item.Player2 != null)
+                    await SendTo(item.Player2.EndPoint, Encoding.UTF8.GetBytes($"204 0"));
+            }
+
+            
+        }
+
+        private async Task SendLatestGamestate(Session item)
+        {
+            string gameState = item.ToString();
+
+            if (item.Player2 == null)
+            {
+                await SendTo(item.Player1.EndPoint, Encoding.UTF8.GetBytes($"202 {gameState} {item.Player1.X} {item.Player1.Y} {10} {5}"));
+            }
+
+            else
+            {
+                await SendTo(item.Player1.EndPoint, Encoding.UTF8.GetBytes($"202 {gameState} {item.Player1.X} {item.Player1.Y} {item.Player2.X} {item.Player2.Y}"));
+                await SendTo(item.Player2.EndPoint, Encoding.UTF8.GetBytes($"202 {gameState} {item.Player2.X} {item.Player2.Y} {item.Player1.X} {item.Player1.Y}"));
+            }
+        }
+
+        private async Task CheckClientConnections(Session item)
+        {
+            if (item.IsConnectionCheckNecessary())
+            {
+                //if (item.Player1 != null)
+                //{
+                //    await SendTo(item.Player1.EndPoint, Encoding.UTF8.GetBytes($"205"));
+                //    item.Player1.AttemptAmount++;
+                //}
+
+                //if (item.Player2 != null)
+                //{
+                //    await SendTo(item.Player2.EndPoint, Encoding.UTF8.GetBytes($"205"));
+                //    item.Player2.AttemptAmount++;
+                //}
+
+                if (item.IsPlayerDisconnected(item.Player1))
+                {
+                    item.Disconnect(item.Player1);
+                    await SendTo(item.Player1.EndPoint, Encoding.UTF8.GetBytes($"410 Сonnection lost"));
+                }
+
+                else if (item.IsPlayerDisconnected(item.Player2))
+                {
+                    item.Disconnect(item.Player2);
+                    await SendTo(item.Player2.EndPoint, Encoding.UTF8.GetBytes($"410 Сonnection lost"));
+                }
+
+            }
+        }
+
         public void StartMessageLoop()
         {
 
@@ -258,13 +303,9 @@ namespace ServerBomberman
                                             break;
                                         }
 
-
-
-
                                     default:
                                         break;
                                 }
-                                await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes($" Failed to disconnect from session"));
 
                                 break;
                             }
@@ -318,6 +359,43 @@ namespace ServerBomberman
 
                         }
 
+                        //Ping
+                    case 4:
+                        {
+                            Session? session = FindSessionByPlayerID(gameInterpreter.PlayerID);
+
+                            if (session is null)
+                            {
+                                await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes($"400 Failed to disconnect from session"));
+                                break;
+                            }
+
+                            else
+                            {
+                                int messageCode = gameInterpreter.DoAction(response, session);
+
+                                switch (messageCode)
+                                {
+                                    case 200:
+                                        {
+                                            await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes($"{messageCode} Your ping message recieved"));
+                                            break;
+                                        }
+
+                                    case 201:
+                                        {
+                                            await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes($"{messageCode} Player is null, ping message is not accepted"));
+                                            break;
+                                        }
+
+                                    default:
+                                        break;
+                                }
+                                await SendTo(result.RemoteEndPoint, Encoding.UTF8.GetBytes($" Failed to disconnect from session"));
+
+                                break;
+                            }
+                        }
 
                     case 400:
                         {
@@ -345,7 +423,7 @@ namespace ServerBomberman
 
         }
 
-        private void UpdateSessions()
+        private void UpdateSessionPool()
         {
             for (int i = 0; i < Sessions.Count; i++)
             {

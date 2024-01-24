@@ -164,6 +164,8 @@ namespace ServerBomberman
         public bool IsGameEnded { get; set; }
         public Entity[,] GameState { get; set; }
         public DateTime StartTime { get; set; }
+        public DateTime ConnectionTimer { get; set; }
+
 
         public bool Move(Player player, int deltaX, int deltaY)
         {
@@ -238,6 +240,24 @@ namespace ServerBomberman
             return false;
         }
 
+        public bool IsConnectionCheckNecessary()
+        {
+            if (DateTime.Now - ConnectionTimer >= TimeSpan.FromMilliseconds(500))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public bool UpdatePlayerConnection(Player player)
+        {
+            if (player == null)
+            {
+                return false;
+            }
+            player.LastConnectionUpdateTime = DateTime.Now;
+            return true;
+        }
 
         public void ActivateBombs()
         {
@@ -357,8 +377,8 @@ namespace ServerBomberman
 
         public bool Disconnect(Player player)
         {
-            Player1 = null;
-            Player2 = null;
+
+            player.Destroy();
             IsGameEnded = true;
 
             return true;
@@ -427,6 +447,13 @@ namespace ServerBomberman
             }
 
             return gameState.TrimEnd();
+        }
+
+        internal bool IsPlayerDisconnected(Player player)
+        {
+            if(player == null)
+                return false;
+            return !player.IsPlayerConnected();
         }
     }
 }
